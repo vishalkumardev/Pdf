@@ -38,21 +38,14 @@
   </div>
 
   <!-- Certificate Template -->
-  <div id="certificate" class="bg-white shadow-lg border border-gray-200 max-w-4xl w-full p-8 md:p-16 relative rounded-lg hidden">
-    <!-- Decorative Borders -->
-    <div class="absolute top-0 left-0 w-full h-8 bg-yellow-500 transform -skew-y-3"></div>
-    <div class="absolute bottom-0 left-0 w-full h-8 bg-yellow-500 transform -skew-y-3"></div>
-    <div class="absolute top-0 left-0 w-full h-4 bg-blue-900 transform -skew-y-3" style="margin-top: -1.5rem;"></div>
-    <div class="absolute bottom-0 left-0 w-full h-4 bg-blue-900 transform -skew-y-3" style="margin-bottom: -1.5rem;"></div>
-    
-    <!-- Certificate Content -->
+  <div id="certificate" class="bg-white shadow-lg border border-gray-200 max-w-7xl w-full p-8 md:p-16 relative rounded-lg hidden">
     <div class="text-center mt-8">
       <h1 class="text-5xl font-bold text-gray-800">Certificate of Completion</h1>
       <p class="mt-4 text-lg text-gray-600">This certificate is proudly awarded to</p>
       <h2 id="certStudentName" class="text-4xl font-semibold text-gray-800 mt-4 italic">[Student Name]</h2>
       <p class="mt-4 text-lg text-gray-600">for successfully completing the course</p>
       <h3 id="certCourseName" class="text-2xl font-medium text-gray-800 mt-2">[Course Name]</h3>
-      <p class="mt-4 text-gray-600 text-sm max-w-xl mx-auto">
+      <p class="mt-4 text-gray-600 text-sm max-w-2xl mx-auto">
         Congratulations on your hard work and dedication. We are confident that the skills you've gained will contribute to your future success.
       </p>
 
@@ -61,12 +54,12 @@
         <img src="https://cdn-icons-png.flaticon.com/512/9521/9521731.png" alt="Seal" class="w-28 h-28">
       </div>
 
-      <!-- License ID and Team LearnCodes Signature Section -->
+      <!-- License ID and Signature Section -->
       <div class="flex justify-between mt-12 text-center">
         <!-- License ID -->
         <div>
           <p class="text-gray-600 font-medium">License ID</p>
-          <p id="certCompletionDate" class="text-gray-800 font-semibold">[Date]</p>
+          <p id="certLicenseID" class="text-gray-800 font-semibold">[License ID]</p>
         </div>
         <!-- Team LearnCodes Signature -->
         <div>
@@ -79,6 +72,11 @@
   </div>
 
   <script>
+    // Generate Random License ID
+    function generateLicenseID() {
+      return 'LC-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
     // Generate Certificate
     document.getElementById("generateBtn").addEventListener("click", () => {
       const studentName = document.getElementById("studentName").value;
@@ -93,7 +91,7 @@
       // Inject data into the certificate
       document.getElementById("certStudentName").textContent = studentName;
       document.getElementById("certCourseName").textContent = courseName;
-      document.getElementById("certCompletionDate").textContent = completionDate;
+      document.getElementById("certLicenseID").textContent = generateLicenseID();
 
       // Show the certificate and download button
       document.getElementById("certificate").classList.remove("hidden");
@@ -104,11 +102,11 @@
     document.getElementById("downloadBtn").addEventListener("click", () => {
       const element = document.getElementById("certificate");
       const opt = {
-        margin: 1,
+        margin: 0,
         filename: `Certificate.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        jsPDF: { unit: "in", format: "a4", orientation: "landscape" },
       };
       html2pdf().set(opt).from(element).save();
     });
