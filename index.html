@@ -3,101 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificate Generator</title>
+  <title>Certificate of Completion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Lora:wght@400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      font-family: 'Lora', serif;
     }
-
-    .certificate {
-      width: 800px;
-      height: 600px;
-      border: 10px solid #2c3e50;
-      padding: 20px;
-      background-color: #fff;
-      text-align: center;
-      position: relative;
+    h1, h2, h3 {
+      font-family: 'Montserrat', sans-serif;
     }
-
-    .certificate h1 {
-      font-size: 40px;
-      color: #2c3e50;
-    }
-
-    .certificate p {
-      font-size: 20px;
-      margin: 10px 0;
-    }
-
-    .certificate .name {
-      font-size: 30px;
-      font-weight: bold;
-      color: #e74c3c;
-    }
-
-    .certificate .date {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      font-size: 16px;
-      color: #34495e;
-    }
-
-    .form-group {
-      margin: 10px 0;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #2c3e50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    button:hover {
-      background-color: #34495e;
+    .signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-  <div class="form-group">
-    <label for="studentName">Student Name:</label>
-    <input type="text" id="studentName" placeholder="Enter Student Name">
-  </div>
-  <div class="form-group">
-    <label for="courseName">Course Name:</label>
-    <input type="text" id="courseName" placeholder="Enter Course Name">
-  </div>
-  <div class="form-group">
-    <label for="completionDate">Completion Date:</label>
-    <input type="date" id="completionDate">
-  </div>
-  <button id="generateBtn">Generate Certificate</button>
-  <button id="downloadBtn" style="display:none;">Download Certificate</button>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen space-y-4">
+  <!-- Input Form -->
+  <div class="bg-white shadow-lg p-6 rounded-lg w-full max-w-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Generate Certificate</h2>
+    <label class="block text-gray-700">Student Name:</label>
+    <input type="text" id="studentName" class="w-full border-gray-300 rounded-lg p-2 mb-4" placeholder="Enter Student Name">
 
-  <div class="certificate" id="certificate" style="display:none;">
-    <h1>Certificate of Completion</h1>
-    <p>This is to certify that</p>
-    <p class="name" id="certStudentName">[Student Name]</p>
-    <p>has successfully completed the course</p>
-    <p class="course" id="certCourseName">[Course Name]</p>
-    <p>on</p>
-    <p class="date" id="certCompletionDate">[Date]</p>
+    <label class="block text-gray-700">Course Name:</label>
+    <input type="text" id="courseName" class="w-full border-gray-300 rounded-lg p-2 mb-4" placeholder="Enter Course Name">
+
+    <label class="block text-gray-700">Completion Date:</label>
+    <input type="date" id="completionDate" class="w-full border-gray-300 rounded-lg p-2 mb-4">
+
+    <button id="generateBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Generate Certificate</button>
+    <button id="downloadBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg mt-4 hidden">Download Certificate</button>
+  </div>
+
+  <!-- Certificate Template -->
+  <div id="certificate" class="bg-white shadow-lg border border-gray-200 max-w-4xl w-full p-8 md:p-16 relative rounded-lg hidden">
+    <!-- Decorative Borders -->
+    <div class="absolute top-0 left-0 w-full h-8 bg-yellow-500 transform -skew-y-3"></div>
+    <div class="absolute bottom-0 left-0 w-full h-8 bg-yellow-500 transform -skew-y-3"></div>
+    <div class="absolute top-0 left-0 w-full h-4 bg-blue-900 transform -skew-y-3" style="margin-top: -1.5rem;"></div>
+    <div class="absolute bottom-0 left-0 w-full h-4 bg-blue-900 transform -skew-y-3" style="margin-bottom: -1.5rem;"></div>
+    
+    <!-- Certificate Content -->
+    <div class="text-center mt-8">
+      <h1 class="text-5xl font-bold text-gray-800">Certificate of Completion</h1>
+      <p class="mt-4 text-lg text-gray-600">This certificate is proudly awarded to</p>
+      <h2 id="certStudentName" class="text-4xl font-semibold text-gray-800 mt-4 italic">[Student Name]</h2>
+      <p class="mt-4 text-lg text-gray-600">for successfully completing the course</p>
+      <h3 id="certCourseName" class="text-2xl font-medium text-gray-800 mt-2">[Course Name]</h3>
+      <p class="mt-4 text-gray-600 text-sm max-w-xl mx-auto">
+        Congratulations on your hard work and dedication. We are confident that the skills you've gained will contribute to your future success.
+      </p>
+
+      <!-- Badge/Seal -->
+      <div class="flex items-center justify-center mt-8">
+        <img src="https://cdn-icons-png.flaticon.com/512/9521/9521731.png" alt="Seal" class="w-28 h-28">
+      </div>
+
+      <!-- License ID and Team LearnCodes Signature Section -->
+      <div class="flex justify-between mt-12 text-center">
+        <!-- License ID -->
+        <div>
+          <p class="text-gray-600 font-medium">License ID</p>
+          <p id="certCompletionDate" class="text-gray-800 font-semibold">[Date]</p>
+        </div>
+        <!-- Team LearnCodes Signature -->
+        <div>
+          <p class="signature text-gray-800">LearnCodes</p>
+          <div class="border-t-2 border-gray-400 w-32 mx-auto mb-1"></div>
+          <p class="text-gray-600 font-medium">Team LearnCodes</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
+    // Generate Certificate
     document.getElementById("generateBtn").addEventListener("click", () => {
       const studentName = document.getElementById("studentName").value;
       const courseName = document.getElementById("courseName").value;
@@ -108,16 +90,17 @@
         return;
       }
 
-      // Inject data into certificate
+      // Inject data into the certificate
       document.getElementById("certStudentName").textContent = studentName;
       document.getElementById("certCourseName").textContent = courseName;
       document.getElementById("certCompletionDate").textContent = completionDate;
 
-      // Show certificate and download button
-      document.getElementById("certificate").style.display = "block";
-      document.getElementById("downloadBtn").style.display = "inline-block";
+      // Show the certificate and download button
+      document.getElementById("certificate").classList.remove("hidden");
+      document.getElementById("downloadBtn").classList.remove("hidden");
     });
 
+    // Download Certificate
     document.getElementById("downloadBtn").addEventListener("click", () => {
       const element = document.getElementById("certificate");
       const opt = {
@@ -125,7 +108,7 @@
         filename: `Certificate.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "A4", orientation: "landscape" },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
       };
       html2pdf().set(opt).from(element).save();
     });
